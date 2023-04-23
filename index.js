@@ -1,12 +1,38 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate,useParams  } from 'react-router-dom';
 import { createRoot } from 'react-dom';
 import { useEffect, useState } from 'react';
+import {Link} from 'react-router-dom';
+
+
+
+
+
 
 function App() {
   const [{buttonText1, buttonText2}, setButtonText] = useState({buttonText1: 'Home', buttonText2: 'Contact'});
   const [title, setTitle] = useState("OPC Home title");
+
+  const [error, setError] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/users/")
+      .then(res => res.json())
+      .then(
+        (data) => {
+          setIsLoaded(true);
+          setUsers(data);
+        },
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      )
+  }, []);
+
+
 
   useEffect(() => {
     document.title = title;
@@ -31,42 +57,73 @@ function App() {
       <button onClick={navigateToContacts}>{buttonText2}</button>
       <Routes>
         <Route path="/contacts" element={<Contacts />} />
-        <Route path="/" element={<Home name="om" />} />
+        <Route path="/" element={<Home users={users} error={error} name="om"/>} />
+        <Route path="/address/:name" element={<Address users={users}  />} />
       </Routes>
     </div>
   );
 }
-
+function Address({ users }) {
+  const { name } = useParams();
+  console.log({name});
+  const user = users.find(user => user.name === name);
+  return (
+    <div>
+      <h2>Address for {name}</h2>
+      <table>
+        <tbody>
+          <tr>
+            <td>Street:</td>
+            <td>{user.address.street}</td>
+          </tr>
+          <tr>
+            <td>Suite:</td>
+            <td>{user.address.suite}</td>
+          </tr>
+          <tr>
+            <td>City:</td>
+            <td>{user.address.city}</td>
+          </tr>
+          <tr>
+            <td>Zipcode:</td>
+            <td>{user.address.zipcode}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+}
 function Home(props) {
-  const [error, setError] = useState(null);
-  const [users, setUsers] = useState([]);
-  const [isLoaded, setIsLoaded] = useState(false);
 
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users/")
-      .then(res => res.json())
-      .then(
-        (data) => {
-          setIsLoaded(true);
-          setUsers(data);
-        },
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      )
-  }, []);
+  const { error, users, name } = props;
 
   return (
     <div>
+        <h2>{name}</h2>
       <h2>Hello World</h2>
-      <h3>{props.name}</h3>
+       
+
+
+      
+    
+      
+  
+
+
       {error ? (<div>No data</div>) : (
-        <ul>
+       
+        <div className="container">
+       
           {users.map(user => (
-            <li key={user.id}>{user.name}</li>
+
+<div className="row">
+<Link to={`/address/${user.name}`}>{user.name}</Link>
+<div className="col-sm-4">{user.email}</div>
+<div className="col-sm-4">{user.address.street}</div>
+</div>
+           
           ))}
-        </ul>
+           </div>
       )}
     </div>
   );
