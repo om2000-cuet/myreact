@@ -20,6 +20,18 @@ module.exports = {
             ]
           }
         }
+      },
+      {
+        test: /\.ejs$/,
+        loader: 'ejs-compiled-loader'
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader']
+      },
+      {
+        test: /\.scss$/,
+        use: ['style-loader', 'css-loader', 'sass-loader']
       }
     ]
   },
@@ -30,6 +42,6 @@ module.exports = {
     })
   ],
   devServer: {
-    port: 3000
+    port: 3001
   }
 };
