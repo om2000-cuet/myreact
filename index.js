@@ -110,6 +110,9 @@ function Address({ users }) {
 }
 function Home(props) {
   const { error, users, name } = props;
+  const [namea,setName]=useState("");
+  const [inputs,setInputs]=useState({});
+
   const [img, setImg] = useState("https://allaboutbasic.files.wordpress.com/2023/03/header.jpg");
   function ImgChange(props) {
     return (
@@ -117,6 +120,35 @@ function Home(props) {
       <img src={props.change} />
      
     ) 
+  }
+const handleChange=(event)=>{
+ 
+};
+
+const handleSubmit=(event)=>{
+  event.preventDefault();
+  const name=event.target.username.value;
+  const age=event.target.age.value;
+  setInputs(  {...inputs, name,age   }       );
+   console.log(event.target.username.value)
+ 
+  alert(JSON.stringify(inputs));
+};
+
+  function MyForm(){
+    
+    return(
+      <form onSubmit={handleSubmit}>
+
+<label>Enter your name 
+  <input type="text" name="username" value={inputs.name}   /></label>
+<label>Enter Your Age:
+<input type="number" name="age" value={inputs.age }  />
+
+</label>
+<input type="submit" />
+      </form>
+    )
   }
 
   function imageChange(img) {
@@ -149,6 +181,9 @@ const opc=()=>{
       <button onClick={()=>test('https://allaboutbasic.files.wordpress.com/2023/03/silueta.png')}>Img 2</button>
 <img src={img}/>
 <ImgChange change={img}/>
+<MyForm/>
+
+
       {error ? (<div>No data</div>) : (
         <div className="container">
           {users.map(user => (
