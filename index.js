@@ -109,6 +109,12 @@ function Address({ users }) {
   );
 }
 function Home(props) {
+  const cars=[ 
+    { id:1, brand:'ford'},
+    {id:2, brand: 'bmw'},
+    {id:3, brand : 'audi'}
+  ];
+
   const { error, users, name } = props;
   const [namea,setName]=useState("");
   const [inputs,setInputs]=useState({});
@@ -182,7 +188,14 @@ const opc=()=>{
 <img src={img}/>
 <ImgChange change={img}/>
 <MyForm/>
+<ul>
+{
+  cars.map(
+    (car)=><li>{car.id} {car.brand}</li>
+  )
+}
 
+</ul>
 
       {error ? (<div>No data</div>) : (
         <div className="container">
